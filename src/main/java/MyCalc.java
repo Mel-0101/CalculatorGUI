@@ -147,7 +147,7 @@ public class MyCalc extends WindowAdapter implements ActionListener {
             if (ex.getClass() == ArithmeticException.class) {
                 display.setText("Teilen durch 0 nicht möglich");
             }
-        };
+        }
     }
 
     private void operation(int operationNum, String command) {
