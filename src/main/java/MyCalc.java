@@ -1,28 +1,27 @@
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
+import java.awt.event.*;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 public class MyCalc extends WindowAdapter implements ActionListener {
 
-    private final Frame f;
+    private final Frame frame;
     private final Label display, displayTop;
     private static final Color c = new Color(0x94C5DC);
     private int operation;
-    private double operant1;
-    private static final int B_SIZE = 50;
-    private static final int B_GAP = 75;
+    private BigDecimal operand1;
+    private static final int BUTTON_SIZE = 50;
+    private static final int BUTTON_GAP = 75;
 
     // initializing using constructor
     MyCalc() {
 
         // creating a Frame
-        f = new Frame();
-        f.setSize(375, 570);
-        f.setBackground(new Color(0xE5E5E5));
+        frame = new Frame();
+        frame.setSize(375, 570);
+        frame.setBackground(new Color(0xE5E5E5));
 
-        f.addWindowListener(this);
+        frame.addWindowListener(this);
 
         displayTop = new Label();
         displayTop.setBounds(50, 75, 275, 25);
@@ -53,63 +52,60 @@ public class MyCalc extends WindowAdapter implements ActionListener {
         // first row
         for (int i = 0; i < 3; i++) {
             if (buttonLabels[i].equals("CE")) {
-                buttons[i].setBounds(x, y, 125, B_SIZE);
-                x += B_GAP * 2;
+                buttons[i].setBounds(x, y, 125, BUTTON_SIZE);
+                x += BUTTON_GAP * 2;
             } else {
-                buttons[i].setBounds(x, y, B_SIZE, B_SIZE);
-                x += B_GAP;
+                buttons[i].setBounds(x, y, BUTTON_SIZE, BUTTON_SIZE);
+                x += BUTTON_GAP;
             }
         }
 
         x = 50;
-        y += B_GAP;
+        y += BUTTON_GAP;
 
         // second row
         for (int i = 3; i < 7; i++) {
-            buttons[i].setBounds(x, y, B_SIZE, B_SIZE);
-            x += B_GAP;
+            buttons[i].setBounds(x, y, BUTTON_SIZE, BUTTON_SIZE);
+            x += BUTTON_GAP;
         }
 
         x = 50;
-        y += B_GAP;
+        y += BUTTON_GAP;
 
         // third row
         for (int i = 7; i < 11; i++) {
-            buttons[i].setBounds(x, y, B_SIZE, B_SIZE);
-            x += B_GAP;
+            buttons[i].setBounds(x, y, BUTTON_SIZE, BUTTON_SIZE);
+            x += BUTTON_GAP;
         }
 
         x = 50;
-        y += B_GAP;
+        y += BUTTON_GAP;
 
         // fourth row
         for (int i = 11; i < 15; i++) {
-            buttons[i].setBounds(x, y, B_SIZE, B_SIZE);
-            x += B_GAP;
+            buttons[i].setBounds(x, y, BUTTON_SIZE, BUTTON_SIZE);
+            x += BUTTON_GAP;
         }
 
         x = 50;
-        y += B_GAP;
+        y += BUTTON_GAP;
 
         // fifth row
-        for (int i = 15; i < buttons.length; i++) {
-            if (!buttonLabels[i].equals("=")) {
-                buttons[i].setBounds(x, y, B_SIZE, B_SIZE);
-                x += B_GAP;
-            } else {
-                buttons[i].setBounds(x, y, 125, B_SIZE);
-            }
+        for (int i = 15; i < buttons.length - 1; i++) {
+            buttons[i].setBounds(x, y, BUTTON_SIZE, BUTTON_SIZE);
+            x += BUTTON_GAP;
         }
+        buttons[buttons.length - 1].setBounds(x, y, 125, BUTTON_SIZE);
 
 
         // adding components
 
-        f.add(display);
-        f.add(displayTop);
+        frame.add(display);
+        frame.add(displayTop);
 
         // adding buttons, eventListeners and color
         for (Button button : buttons) {
-            f.add(button);
+            frame.add(button);
             button.addActionListener(this);
             if (button.getActionCommand().equals("CE") || button.getActionCommand().equals("=")) {
                 button.setBackground(c);
@@ -117,17 +113,17 @@ public class MyCalc extends WindowAdapter implements ActionListener {
         }
 
         // setting the title of frame
-        f.setTitle("My Calculator");
+        frame.setTitle("My Calculator");
 
         // layout
-        f.setLayout(null);
+        frame.setLayout(null);
 
         // setting visibility of frame
-        f.setVisible(true);
+        frame.setVisible(true);
     }
 
     public void windowClosing(WindowEvent e) {
-        f.dispose();
+        frame.dispose();
     }
 
     @Override
@@ -135,37 +131,45 @@ public class MyCalc extends WindowAdapter implements ActionListener {
         String command = e.getActionCommand();
         String displayText = !display.getText().equals("0") ? display.getText() : "";
 
-        switch (command) {
-            case "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "." -> display.setText(displayText + command);
-            case "back" -> display.setText(!displayText.isEmpty() ? displayText.substring(0, displayText.length() - 1) : "0");
-            case "+" -> operation(1, command);
-            case "-" -> operation(2, command);
-            case "*" -> operation(3, command);
-            case "/" -> operation(4, command);
-            case "=" -> display.setText(calculate());
-            default -> reset();
-        }
+        try {
+            switch (command) {
+                case "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "." -> display.setText(displayText + command);
+                case "back" ->
+                        display.setText(!displayText.isEmpty() ? displayText.substring(0, displayText.length() - 1) : "0");
+                case "+" -> operation(1, command);
+                case "-" -> operation(2, command);
+                case "*" -> operation(3, command);
+                case "/" -> operation(4, command);
+                case "=" -> display.setText(calculate());
+                default -> reset();
+            }
+        } catch (Exception ex){
+            if (ex.getClass() == ArithmeticException.class) {
+                display.setText("Teilen durch 0 nicht möglich");
+            }
+        };
     }
 
     private void operation(int operationNum, String command) {
-        operant1 = Double.parseDouble(display.getText());
+        operand1 = new BigDecimal(display.getText());
         displayTop.setText(display.getText() + command);
         display.setText("");
         operation = operationNum;
     }
 
     private String calculate() {
-        double operant2 = Double.parseDouble(display.getText());
+        BigDecimal operand2 = new BigDecimal(display.getText());
         displayTop.setText(displayTop.getText() + display.getText() + "=");
 
-        double result = switch (operation) {
-            case 1 -> operant1 + operant2;
-            case 2 -> operant1 - operant2;
-            case 3 -> operant1 * operant2;
-            case 4 -> operant1 / operant2;
-            default -> 0;
+        BigDecimal result = switch (operation) {
+            case 1 -> operand1.add(operand2);
+            case 2 -> operand1.subtract(operand2);
+            case 3 -> operand1.multiply(operand2);
+            case 4 -> operand1.divide(operand2, 15, RoundingMode.HALF_UP);
+            default -> new BigDecimal(0);
         };
-        return (result * 10) % 10 == 0 ? String.valueOf((int) result) : String.valueOf(result);
+
+        return String.valueOf(result);
     }
 
     private void reset() {
