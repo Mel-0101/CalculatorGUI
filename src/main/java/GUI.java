@@ -1,21 +1,15 @@
 import java.awt.*;
 import java.awt.event.*;
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 
-public class MyCalc extends WindowAdapter implements ActionListener {
+public class GUI extends WindowAdapter implements ActionListener {
 
-    private final Frame frame;
-    private final Label display, displayTop;
-    private static final Color c = new Color(0x94C5DC);
-    private int operation;
-    private BigDecimal operand1;
-    private static final int BUTTON_SIZE = 50;
-    private static final int BUTTON_GAP = 75;
+    Frame frame;
+    Label display, displayTop;
+    final Color BUTTON_COLOR = new Color(0x94C5DC);
+    final int BUTTON_SIZE = 50;
+    final int BUTTON_GAP = 75;
 
-    // initializing using constructor
-    MyCalc() {
-
+    public GUI() {
         // creating a Frame
         frame = new Frame();
         frame.setSize(375, 570);
@@ -108,7 +102,7 @@ public class MyCalc extends WindowAdapter implements ActionListener {
             frame.add(button);
             button.addActionListener(this);
             if (button.getActionCommand().equals("CE") || button.getActionCommand().equals("=")) {
-                button.setBackground(c);
+                button.setBackground(BUTTON_COLOR);
             }
         }
 
@@ -120,6 +114,11 @@ public class MyCalc extends WindowAdapter implements ActionListener {
 
         // setting visibility of frame
         frame.setVisible(true);
+    }
+
+    private void reset() {
+        display.setText("0");
+        displayTop.setText("");
     }
 
     public void windowClosing(WindowEvent e) {
@@ -136,48 +135,19 @@ public class MyCalc extends WindowAdapter implements ActionListener {
                 case "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "." -> display.setText(displayText + command);
                 case "back" ->
                         display.setText(!displayText.isEmpty() ? displayText.substring(0, displayText.length() - 1) : "0");
-                case "+" -> operation(1, command);
-                case "-" -> operation(2, command);
-                case "*" -> operation(3, command);
-                case "/" -> operation(4, command);
-                case "=" -> display.setText(calculate());
+                case "+" -> Calculate.operation(1, command, this);
+                case "-" -> Calculate.operation(2, command, this);
+                case "*" -> Calculate.operation(3, command, this);
+                case "/" -> Calculate.operation(4, command, this);
+                case "=" -> display.setText(Calculate.calculate(this));
                 default -> reset();
             }
-        } catch (Exception ex){
+        } catch (Exception ex) {
             if (ex.getClass() == ArithmeticException.class) {
                 display.setText("Teilen durch 0 nicht möglich");
             }
         }
     }
 
-    private void operation(int operationNum, String command) {
-        operand1 = new BigDecimal(display.getText());
-        displayTop.setText(display.getText() + command);
-        display.setText("");
-        operation = operationNum;
-    }
 
-    private String calculate() {
-        BigDecimal operand2 = new BigDecimal(display.getText());
-        displayTop.setText(displayTop.getText() + display.getText() + "=");
-
-        BigDecimal result = switch (operation) {
-            case 1 -> operand1.add(operand2);
-            case 2 -> operand1.subtract(operand2);
-            case 3 -> operand1.multiply(operand2);
-            case 4 -> operand1.divide(operand2, 15, RoundingMode.HALF_UP);
-            default -> new BigDecimal(0);
-        };
-
-        return String.valueOf(result);
-    }
-
-    private void reset() {
-        display.setText("0");
-        displayTop.setText("");
-    }
-
-    public static void main(String[] args) {
-        new MyCalc();
-    }
 }
