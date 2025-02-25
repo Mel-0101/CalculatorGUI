@@ -3,6 +3,7 @@ import java.awt.event.*;
 
 public class GUI extends WindowAdapter implements ActionListener {
 
+    Calculator calc = new Calculator();
     // Frame for main window and two labels for displays
     Frame frame;
     Label display, displayTop;
@@ -13,6 +14,7 @@ public class GUI extends WindowAdapter implements ActionListener {
 
     // Constructor
     public GUI() {
+
         // Initialize the main window with size and background color
         frame = new Frame();
         frame.setSize(375, 570);
@@ -114,13 +116,8 @@ public class GUI extends WindowAdapter implements ActionListener {
             }
         }
 
-        // Setting the title of frame
         frame.setTitle("My Calculator");
-
-        // Layout
         frame.setLayout(null);
-
-        // Setting visibility of frame
         frame.setVisible(true);
     }
 
@@ -153,11 +150,11 @@ public class GUI extends WindowAdapter implements ActionListener {
                 case "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "." -> display.setText(displayText + command);
                 case "back" ->
                         display.setText(!displayText.isEmpty() ? displayText.substring(0, displayText.length() - 1) : "0");
-                case "+" -> Calculate.operation(1, command, this);
-                case "-" -> Calculate.operation(2, command, this);
-                case "*" -> Calculate.operation(3, command, this);
-                case "/" -> Calculate.operation(4, command, this);
-                case "=" -> display.setText(Calculate.calculate(this));
+                case "+" -> calc.operation(1, command, this);
+                case "-" -> calc.operation(2, command, this);
+                case "*" -> calc.operation(3, command, this);
+                case "/" -> calc.operation(4, command, this);
+                case "=" -> display.setText(calc.calculate(this));
                 default -> reset();
             }
         } catch (Exception ex) {

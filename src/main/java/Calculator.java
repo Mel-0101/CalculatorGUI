@@ -2,10 +2,10 @@
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
-public class Calculate {
+public class Calculator {
     // Stores the current operation and the first operand as a BigDecimal for precise calculations
-    static int operationNum;
-    static BigDecimal operand1;
+    private int operationNum;
+    private BigDecimal operand1;
 
     /**
      * Stores the first operand and the selected operation when an operation is triggered.<br>
@@ -14,7 +14,7 @@ public class Calculate {
      * @param command pressed button
      * @param gui GUI object
      */
-    static void operation(int num, String command, GUI gui) {
+    protected void operation(int num, String command, GUI gui) {
         operand1 = new BigDecimal(gui.display.getText());
         operationNum = num;
         gui.displayTop.setText(gui.display.getText() + command);
@@ -27,7 +27,7 @@ public class Calculate {
      * @param gui GUI object
      * @return result of the calculation as String
      */
-    static String calculate(GUI gui) {
+    protected String calculate(GUI gui) {
         BigDecimal operand2 = new BigDecimal(gui.display.getText());
         gui.displayTop.setText(gui.displayTop.getText() + gui.display.getText() + "=");
 
