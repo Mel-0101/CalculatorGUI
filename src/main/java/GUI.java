@@ -157,11 +157,11 @@ public class GUI extends WindowAdapter implements ActionListener {
                 case "=" -> display.setText(calc.calculate(this));
                 default -> reset();
             }
-        } catch (Exception ex) {
+        } catch (ArithmeticException ex) {
             // Error handling for division by zero
-            if (ex.getClass() == ArithmeticException.class) {
-                display.setText("Teilen durch 0 nicht möglich");
-            }
+            display.setText("Teilen durch 0 nicht möglich");
+        } catch (Exception ex) {
+            // unknown
         }
     }
 
