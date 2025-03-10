@@ -2,6 +2,8 @@
 
 A simple calculator application with a graphical user interface (GUI) implemented in Java.
 
+<img width="271" alt="calculator-1" src="https://github.com/user-attachments/assets/67d09341-ade0-4982-ba4f-5a40e9122f32" />
+
 ## Features
 - Supports basic arithmetic operations: addition, subtraction, multiplication and division
 - Clean and intuitive GUI
