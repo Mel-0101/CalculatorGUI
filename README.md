@@ -13,15 +13,6 @@ A simple calculator application with a graphical user interface (GUI) implemente
 - Java (AWT for GUI components)
 - BigDecimal for precise calculations
 
-## Project Structure
-```
-📂 project-root
- ├── 📄 Main.java       # Entry point of the application
- ├── 📄 GUI.java        # Handles the graphical user interface
- ├── 📄 Calculator.java # Contains logic for arithmetic operations
- └── 📄 README.md       # Project documentation
-```
-
 ## Usage
 - Run the application and use the on-screen buttons to enter numbers and perform calculations.
 - Click "CE" to clear the display.
